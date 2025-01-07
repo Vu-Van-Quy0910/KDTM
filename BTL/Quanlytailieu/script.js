@@ -56,6 +56,66 @@ async function fetchAndRenderCards(apiURL) {
   }
 }
 
+// Hiển thị danh sách tài liệu (cập nhật để xóa 2 sách cuối)
+async function fetchAndRenderCards(apiURL) {
+  const container = document.getElementById("documentCards");
+
+  try {
+    const response = await fetch(apiURL);
+    if (!response.ok) {
+      throw new Error("Không thể tải tài liệu.");
+    }
+    const data = await response.json();
+
+    const items = data.items;
+    const totalItems = items.length;
+    const rows = Math.ceil(totalItems / 4); // Số hàng cần thiết (4 tài liệu mỗi hàng)
+    const totalBoxes = rows * 4; // Tổng số box cần hiển thị
+
+    // Xử lý thêm tài liệu placeholder nếu thiếu
+    const documents = [...items]; // Sao chép dữ liệu gốc
+    while (documents.length < totalBoxes) {
+      documents.push({
+        volumeInfo: {
+          title: "Placeholder Document",
+          previewLink: "#",
+          imageLinks: { thumbnail: "https://via.placeholder.com/150" }, // Hình ảnh mặc định
+          retailPrice: { amount: "50,000 VND" } // Giá tiền mặc định
+        },
+      });
+    }
+
+    // Xóa 2 quyển sách cuối
+    documents.splice(-2, 2); // Loại bỏ 2 phần tử cuối trong mảng
+
+    // Hiển thị danh sách tài liệu
+    container.innerHTML = documents.slice(0, totalBoxes).map((item) => `
+      <div class="card">
+        <img 
+          src="${item.volumeInfo.imageLinks?.thumbnail || 'https://via.placeholder.com/150'}" 
+          alt="Book Cover" 
+          class="book-cover"
+        >
+        <div class="card-header">
+          <span class="card-title">${item.volumeInfo.title}</span>
+        </div>
+        <div class="card-link">
+          <a href="${item.volumeInfo.previewLink}" target="_blank">${item.volumeInfo.previewLink === "#" ? "Đang cập nhật" : "Xem tài liệu"}</a>
+        </div>
+        <div class="card-footer">
+          <div class="price">
+            <span>Giá: ${item.volumeInfo.retailPrice?.amount || "Chưa có giá"}</span>
+          </div>
+          <button class ="Payment">Thanh toán</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (error) {
+    container.innerHTML = `<p style="color: red; text-align: center;">Lỗi: ${error.message}</p>`;
+  }
+}
+
+
 // Hàm hiển thị nội dung tài liệu khi click vào sản phẩm
 function displayDocumentContent(item) {
   const documentContent = document.getElementById("documentContent");
@@ -66,6 +126,8 @@ function displayDocumentContent(item) {
     <a href="${item.volumeInfo.previewLink}" target="_blank">Xem tài liệu</a>
   `;
 }
+
+
 
 // Ẩn danh sách tài liệu khi tải trang
 document.getElementById("documentContent").style.display = 'none';
