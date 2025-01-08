@@ -224,4 +224,9 @@ img {
 .button-secondary{
   cursor: pointer;
 }
+.card-footer .price {
+  font-size: 14px;
+  color: #ff5722;
+}
+
 
