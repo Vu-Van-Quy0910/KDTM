@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz - {{ topic }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Quiz: {{ topic }}</h1>
+
+    <form method="POST">
+        {% set i = 0 %}
+        {% for question in questions %}
+            <div>
+                <h3>{{ question.question }}</h3>
+                {% for option in question.options %}
+                    <label>
+                        <input type="radio" name="q{{ i }}" value="{{ option }}">
+                        {{ option }}
+                    </label><br>
+                {% endfor %}
+            </div>
+            {% set i = i + 1 %}
+        {% endfor %}
+        <button type="submit">Nộp Bài</button>
+    </form>
+</body>
+</html>

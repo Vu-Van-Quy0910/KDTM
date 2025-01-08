@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Kết Quả</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Kết Quả Kiểm Tra - {{ topic }}</h1>
+    <p>Điểm của bạn: {{ score }}/{{ total }}</p>
+    
+    <!-- Display recommendation based on score -->
+    <p>{{ recommendation | safe }}</p> <!-- Display the relevant material recommendation (basic or advanced) -->
+    
+    <a href="/">Quay lại trang chủ</a> <!-- Return to the home page -->
+</body>
+</html>

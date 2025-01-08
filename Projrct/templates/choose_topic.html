@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Chọn Chủ Đề</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Thêm Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <h1>Chọn Chủ Đề Kiểm Tra</h1>
+    <ul>
+        <li>
+            <a href="{{ url_for('quiz', topic='Triết học') }}">
+                <i class="fas fa-brain"></i> Triết học
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('quiz', topic='Chủ nghĩa xã hội') }}">
+                <i class="fas fa-users"></i> Chủ nghĩa xã hội
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('quiz', topic='Toán học') }}">
+                <i class="fas fa-square-root-alt"></i> Toán học
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('quiz', topic='Tiếng Anh') }}">
+                <i class="fas fa-language"></i> Tiếng Anh
+            </a>
+        </li>
+    </ul>
+</body>
+</html>
