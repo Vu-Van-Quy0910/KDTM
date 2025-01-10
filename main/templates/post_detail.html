@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="post-container">
+        <header class="post-header">
+            <h1>{{ post.title }}</h1>
+        </header>
+
+        <div class="post-content">
+            <p>{{ post.content }}</p>
+
+            {% if post.image %}
+                <div class="post-image-container">
+                    <img src="{{ post.image.url }}" alt="Post Image" class="post-image">
+                </div>
+            {% endif %}
+            
+            {% if post.video %}
+            <div class="post-video-container">
+                <video controls style="max-width: 100%; margin-top: 10px;">
+                    <source src="{{ post.video.url }}" type="video/mp4">
+                    Trình duyệt của bạn không hỗ trợ video.
+                </video>
+            </div>
+            {% endif %}
+            
+            {% if post.document %}
+                <div class="post-document">
+                    <a href="{{ post.document.url }}" target="_blank" class="btn btn-primary">Tải tài liệu</a>
+                </div>
+            {% endif %}
+        </div>
+
+
+        <div class="post-metadata">
+            <p>
+                Đăng bởi 
+                {% if post.author.is_staff %}
+                    <strong>Admin</strong>
+                {% else %}
+                    <strong>{{ request.session.display_name }}</strong>
+                {% endif %}
+                vào lúc {{ post.created_at|date:"H:i d/m/Y" }}
+            </p>
+            {% if post.updated_at != post.created_at %}
+                <p><em>Cập nhật lần cuối: {{ post.updated_at|date:"H:i d/m/Y" }}</em></p>
+            {% endif %}
+        </div>
+
+        <div class="post-actions">
+            <p>
+                <span id="post-likes-count">{{ post.likes_count }} <i class="fas fa-thumbs-up"></i> lượt thích</span> |
+                <span id="post-comments-count">{{ post.comments.count }} <i class="fas fa-comments"></i> bình luận</span>
+            </p>
+
+            {% if post.author == user or user.profile.is_admin %}
+                <div class="post-actions-buttons">
+                    <a href="{% url 'edit_post' post.id %}" class="btn btn-secondary">Chỉnh sửa</a>
+                    <a href="{% url 'delete_post' post.id %}" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa bài đăng này không?');">Xóa</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="back-to-forum">
+            <a href="{% url 'forum_home' %}" class="btn btn-primary">Quay lại Forum</a>
+        </div>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

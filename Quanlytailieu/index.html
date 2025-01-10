@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danh sách tài liệu</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+          <h1>Học liệu</h1>
+        </div>
+        <nav class="menu">
+          <a href="#">Giới thiệu</a>
+          <a href="#" id="productLink">Sản phẩm</a>
+          <a href="#">Hướng dẫn</a>
+          <a href="#">Liên hệ</a>
+        </nav>
+        <div class="search-bar">
+          <input type="search" id="searchInput" placeholder="Tìm kiếm tài liệu..." />
+          <button id="searchButton">Tìm kiếm</button>
+        </div>
+        <div class="auth-buttons">
+          <button>Đăng ký</button>
+          <button>Đăng nhập</button>
+        </div>
+    </header>
+    
+
+    <!-- Banner -->
+    <section class="banner">
+        <img src="image.png" alt="Logo Học liệu">
+        <h2>Dễ dàng giảng dạy, học tập linh hoạt</h2>
+        <div class="banner-buttons">
+          <button>Trải nghiệm ngay</button>
+          <button>Tải ngay</button>
+        </div>
+    </section>
+
+    <!-- Danh sách tài liệu -->
+    <section class="product-list">
+        <h2>Danh sách tài liệu</h2>
+        <div id="documentCards" class="card-container"></div>
+        <div id="documentContent" class="document-content"></div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+      console.log("HTML đã được tải thành công!");
+    </script>
+</body>
+</html>
+
+<script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.1.0-beta.0/libs/oversea/index.js"></script>
+<script>
+    new CozeWebSDK.WebChatClient({
+      config: {
+        bot_id: '7454973459379437575',
+      },
+      componentProps: {
+        title: 'Coze',
+      },
+    });
+</script>

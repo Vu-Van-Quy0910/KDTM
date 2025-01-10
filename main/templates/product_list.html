@@ -1,0 +1,414 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách sản phẩm</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    
+</head>
+<style>
+    /* Định dạng chung */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+  padding: 20px 0;
+  background-color: #007BFF;
+  color: #fff;
+}
+
+header h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+header form {
+  margin-top: 10px;
+}
+
+header input[type="text"] {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 300px;
+}
+
+header button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #0056b3;
+  color: white;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+header button:hover {
+  background-color: #003f7f;
+}
+
+/* Lọc theo loại sách */
+.category-filter {
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+}
+
+.category-filter h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.category-filter ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category-filter li {
+  margin: 0;
+}
+
+.category-filter a {
+  text-decoration: none;
+  padding: 8px 15px;
+  background-color: #eaf4ff;
+  color: #007BFF;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.category-filter a:hover {
+  background-color: #007BFF;
+  color: white;
+}
+
+.category-filter a.active {
+  background-color: #0056b3;
+  color: white;
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap; /* Cho phép các sản phẩm xuống dòng */
+    justify-content: space-between; /* Căn giữa các sản phẩm */
+    gap: 20px; /* Khoảng cách giữa các sản phẩm */
+    padding: 20px;
+    max-width: 1200px; /* Chiều rộng tối đa của container */
+    margin: auto; /* Căn giữa theo chiều ngang */
+}
+
+.product-card {
+    flex: 1 1 calc(20% - 20px); /* 5 sản phẩm trên 1 hàng */
+    max-width: calc(20% - 20px); /* Đảm bảo không vượt quá chiều rộng */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-sizing: border-box; /* Bao gồm padding và border trong chiều rộng */
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.product-card img {
+  max-width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.product-card h3 {
+  font-size: 1rem;
+  color: #333;
+  margin: 10px 0;
+}
+
+.product-card p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 5px 0;
+}
+
+.product-card a {
+  display: inline-block;
+  margin-top: 10px;
+  color: #007BFF;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.product-card a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* Phân trang */
+.back-button {
+    display: inline-block;
+    margin: 20px auto; /* Căn giữa theo chiều ngang và khoảng cách trên/dưới */
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff; /* Màu chữ trắng */
+    background-color: #007BFF; /* Màu nền xanh đậm */
+    text-decoration: none;
+    border-radius: 8px; /* Góc bo tròn */
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    border: none;
+}
+
+/* Hiệu ứng hover */
+.back-button:hover {
+    background-color: #0056b3; /* Màu xanh đậm hơn khi hover */
+    transform: scale(1.05); /* Phóng to nhẹ khi hover */
+    text-decoration: none;
+}
+
+/* Căn giữa */
+body {
+    text-align: center; /* Căn giữa toàn bộ nội dung bên trong header */
+}
+
+/* Icon bộ lọc */
+.filter-icon {
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: color 0.3s;
+}
+
+.filter-icon:hover {
+    color: #f1f1f1;
+}
+
+/* Tùy chọn bộ lọc (dropdown) */
+.filter-options {
+    display: none; /* Ẩn menu mặc định */
+    position: absolute; /* Đặt vị trí tuyệt đối so với biểu tượng */
+    top: 100%; /* Hiển thị ở phía trên biểu tượng */
+    right: 430px; /* Canh phải của nút bộ lọc */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    z-index: 1000;
+    min-width: 30px; /* Đặt chiều rộng tối thiểu */
+    transform: translateY(-10px); /* Căn chỉnh thêm */
+}
+
+.filter-options li {
+    margin-bottom: 5px;
+}
+
+.filter-options a {
+    text-decoration: none;
+    color: #007BFF;
+    font-size: 1rem;
+    transition: color 0.3s;
+    display: block;
+    text-align: left;
+    padding: 5px 10px;
+}
+
+.filter-options a:hover {
+    color: #0056b3;
+    background-color: #f0f0f0;
+}
+
+/* Hiển thị menu khi bật */
+.filter-options.show {
+    display: block;
+}
+
+
+</style>
+<body>
+    <!-- <header>
+        <h1>Danh sách sản phẩm</h1>
+        Form tìm kiếm
+        <form method="get" action="{% url 'product_list' %}" class="search-bar" style="position: relative;">
+              <input type="text" name="query" id="search-input" value="{{ query }}" placeholder="Tìm kiếm sản phẩm..." autocomplete="off" />
+              <button type="submit">Tìm kiếm</button>
+              Icon bộ lọc
+              <i class="fas fa-filter filter-icon" onclick="toggleFilterOptions()" title="Bộ lọc"></i>
+              Tùy chọn bộ lọc -->
+              <!-- <ul id="filter-options" class="filter-options">
+                  {% for suggestion in search_suggestions %}
+                      <li>
+                          <a href="#" class="filter-item" data-value="{{ suggestion }}">{{ suggestion }}</a>
+                      </li>
+                  {% endfor %}
+              </ul>
+          </form>
+    </header> -->
+    <header class="navbar">
+      <div class="logo">
+          <h1>Học liệu</h1>
+      </div>
+      <nav class="menu">
+          <a href="{% url 'home' %}">Trang chủ</a>
+          <a href="{% url 'product_list' %}" id="productLink">Sản phẩm</a>
+          <a href="{% url 'forum_home' %}">Diễn đàn</a>
+          <a href="{% url 'profile_view' %}">Thông tin cá nhân</a>
+          <a href="#">Bài kiểm tra</a>
+      </nav>
+      <div class="search-bar">
+          <form method="get" action="#results">
+              <input type="search" name="query" id="searchInput" placeholder="Tìm kiếm tài liệu..." required />
+              <button type="submit" id="searchButton">Tìm kiếm</button>
+          </form>
+      </div>
+      <div class="auth-buttons">
+          {% if user.is_authenticated %}
+              {% if request.session.is_admin %}
+                  <span>Xin chào, Admin</span> <!-- Hiển thị cho admin -->
+              {% else %}
+                  <span>Xin chào, {{ request.session.display_name }}</span> <!-- Hiển thị tên người dùng -->
+              {% endif %}
+              <a href="{% url 'logout' %}" class="btn-logout">Đăng xuất</a>
+          {% else %}
+              <a href="{% url 'login' %}" class="btn-login">Đăng nhập</a>
+          {% endif %}
+      </div>
+  </header>
+    
+    <!-- <a href="http://127.0.0.1:8000/" class="back-button">Quay lại Trang Chủ</a> -->
+    <!-- Lọc theo loại sách -->
+    <div class="category-filter">
+        <h3>Phân loại sách:</h3>
+        <ul>
+            {% for category in categories %}
+                <li>
+                    <a href="?query={{ query }}&category={{ category }}" 
+                       class="{% if selected_category == category %}active{% endif %}">
+                        {{ category }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+
+    <!-- Hiển thị danh sách sản phẩm -->
+    <div class="product-container">
+      {% for product in products.object_list %}
+          <div class="product-card">
+              <img src="{{ product.thumbnail }}" alt="{{ product.title }}" class="product-image"/>
+              <h3>{{ product.title }}</h3>
+              <p>Tác giả: {{ product.authors|join:", " }}</p>
+              <p>Thể loại: {{ product.category }}</p>
+              <button class="payment-button {% if product.is_successful %}hidden{% endif %}" onclick="createPayment('{{ product.id }}')">Thanh toán</button>
+              <a href="{{ product.preview_link }}" 
+                 class="card-link {% if not product.is_successful %}hidden{% endif %}" 
+                 target="_blank">Xem chi tiết</a>
+          </div>
+      {% endfor %}
+  </div>
+    
+    <!-- Phân trang -->
+    <div class="pagination">
+        {% if products.has_previous %}
+            <a href="?query={{ query }}&category={{ selected_category }}&page={{ products.previous_page_number }}" class="pagination-arrow">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+        {% endif %}
+        
+        <span>Trang {{ products.number }} / {{ products.paginator.num_pages }}</span>
+        
+        {% if products.has_next %}
+            <a href="?query={{ query }}&category={{ selected_category }}&page={{ products.next_page_number }}" class="pagination-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        {% endif %}
+    </div>
+    
+</body>
+<script>
+    function toggleFilterOptions() {
+        const filterOptions = document.getElementById('filter-options');
+        filterOptions.classList.toggle('show');
+    }
+
+    // Đóng menu khi nhấn ra ngoài
+    window.onclick = function (event) {
+        const filterOptions = document.getElementById('filter-options');
+        if (!event.target.matches('.filter-icon')) {
+            if (filterOptions.classList.contains('show')) {
+                filterOptions.classList.remove('show');
+            }
+        }
+    };
+
+    // Xử lý khi chọn một chủ đề trong bộ lọc
+    document.querySelectorAll('.filter-item').forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault(); // Ngăn chặn hành động mặc định
+            const queryInput = document.getElementById('search-input');
+            const searchForm = queryInput.closest('form');
+            queryInput.value = this.getAttribute('data-value'); // Gán giá trị vào ô tìm kiếm
+            searchForm.submit(); // Tự động submit form
+        });
+    });
+    function createPayment(productId) {
+            fetch('/create_payment/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    product_id: productId
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Hãy đăng nhập trước');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    alert('Lỗi: ' + data.error);
+                } else if (data.checkoutUrl) {
+                    window.location.href = data.checkoutUrl;
+                } else {
+                    alert('Lỗi: Không tìm thấy liên kết thanh toán.');
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi:', error);
+                alert('Đã xảy ra lỗi: ' + error.message);
+            });
+        }
+
+</script>
+
+</html>

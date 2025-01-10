@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Profile</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Học liệu</h1>
+        </div>
+        <nav class="menu">
+            <a href="{% url 'home' %}">Trang chủ</a>
+            <a href="{% url 'product_list' %}" id="productLink">Sản phẩm</a>
+            <a href="{% url 'forum_home' %}">Diễn đàn</a>
+            <a href="{% url 'profile_view' %}">Thông tin cá nhân</a>
+            <a href="#">Bài kiểm tra</a>
+        </nav>
+        <div class="search-bar">
+            <form method="get" action="#results">
+                <input type="search" name="query" id="searchInput" placeholder="Tìm kiếm tài liệu..." required />
+                <button type="submit" id="searchButton">Tìm kiếm</button>
+            </form>
+        </div>
+        <div class="auth-buttons">
+            {% if user.is_authenticated %}
+                {% if request.session.is_admin %}
+                    <span>Xin chào, Admin</span>
+                {% else %}
+                    <span>Xin chào, {{ request.session.display_name }}</span>
+                {% endif %}
+                <a href="{% url 'logout' %}" class="btn-logout">Đăng xuất</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-login">Đăng nhập</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <h1>Hồ Sơ Của Bạn</h1>
+
+    <div class="product-list">
+        <h2>Sản phẩm đã mua</h2>
+        <div class="card-container">
+            {% if products %}
+                {% for product in products %}
+                    <div class="card">
+                        <img src="{{ product.thumbnail|default:'https://via.placeholder.com/150' }}" 
+                             alt="Book Cover" class="book-cover">
+                        <div class="card-header">
+                            <h3>{{ product.title }}</h3>
+                            <p class="price">Giá: {{ product.formatted_price }}</p>
+                        </div>
+                        <button class="payment-button {% if product.is_successful %}hidden{% endif %}" 
+                                onclick="createPayment('{{ product.id }}')">Thanh toán</button>
+                        <a href="{{ product.preview_link }}" 
+                           class="card-link {% if not product.is_successful %}hidden{% endif %}" 
+                           target="_blank">Xem chi tiết</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Không có sản phẩm nào phù hợp.</p>
+            {% endif %}
+        </div>
+    </div>
+    <div>
+    <!-- Hiển thị tổng tiền đã chi -->
+    <p><strong>Tổng tiền đã chi: </strong>{{ total_spent }} VNĐ</p>
+
+    </div>
+
+    <h3>Biểu đồ chi phí theo tháng</h3>
+    <img src="data:image/png;base64,{{ chart }}" alt="Chi phí theo tháng">
+
+    <div>
+        <h3>Môn học và điểm số:</h3>
+        {{ table_html|safe }}
+    </div>
+
+    <div>
+        <!-- Hiển thị nhận xét và sách gợi ý -->
+<p><strong>Nhận xét và gợi ý sách: </strong>{{ comment_and_books }}</p>
+    </div>
+
+</body>
+</html>

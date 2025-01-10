@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo bài đăng</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #f7f9fc;
+    }
+    .create-post-container {
+        width: 100%;
+        max-width: 600px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+</style>
+<body>
+    <div class="create-post-container">
+        <h1 class="form-title">Tạo bài đăng mới</h1>
+        <form method="post" enctype="multipart/form-data" class="create-post-form">
+            {% csrf_token %}
+            <a href="/forum/" class="btn btn-secondary">Quay lại diễn đàn</a>
+
+            <label for="title">Tiêu đề</label>
+            <input type="text" id="title" name="title" placeholder="Nhập tiêu đề bài viết" required>
+            
+            <label for="content">Nội dung</label>
+            <textarea id="content" name="content" placeholder="Nhập nội dung bài viết" required></textarea>
+            
+            <div class="button-container">
+                <label for="image" class="custom-file-label small-button">Thêm ảnh</label>
+                <input type="file" id="image" name="image" accept="image/*" class="custom-file-input">
+                <span id="image-name" class="file-name"></span>
+
+                <label for="document" class="custom-file-label small-button">Thêm tài liệu</label>
+                <input type="file" id="document" name="document" accept=".pdf,.doc,.docx" class="custom-file-input">
+                <span id="document-name" class="file-name"></span>
+
+                <!-- Thêm video -->
+                <label for="video" class="custom-file-label small-button">Thêm video</label>
+                <input type="file" id="video" name="video" accept="video/*" class="custom-file-input">
+                <span id="video-name" class="file-name"></span>
+
+                <button type="submit" class="btn btn-success small-button">Đăng bài</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+<script>
+    document.getElementById('image').addEventListener('change', function () {
+        const fileName = this.files[0] ? this.files[0].name : "Chưa có file nào được chọn";
+        document.getElementById('image-name').textContent = "Đã chọn: " + fileName;
+    });
+
+    document.getElementById('document').addEventListener('change', function () {
+        const fileName = this.files[0] ? this.files[0].name : "Chưa có file nào được chọn";
+        document.getElementById('document-name').textContent = "Đã chọn: " + fileName;
+    });
+
+    // Thêm sự kiện hiển thị tên video
+    document.getElementById('video').addEventListener('change', function () {
+        const fileName = this.files[0] ? this.files[0].name : "Chưa có file nào được chọn";
+        document.getElementById('video-name').textContent = "Đã chọn: " + fileName;
+    });
+</script>
+
+</html>

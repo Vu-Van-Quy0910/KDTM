@@ -1,0 +1,248 @@
+/* Reset mặc định */
+body, h1, h2, p {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+
+.banner img {
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+}
+
+img {
+  max-width: 100%; /* Đảm bảo hình ảnh không vượt quá chiều rộng của phần tử chứa */
+  height: auto; /* Đảm bảo tỷ lệ khung hình của hình ảnh không bị biến dạng */
+  object-fit: contain; /* Điều chỉnh để giữ nguyên tỷ lệ hình ảnh */
+}
+
+/* Thanh điều hướng */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+/* Menu liên kết trong thanh điều hướng */
+.navbar .menu {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Các liên kết trong menu */
+.navbar .menu a {
+  text-decoration: none;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hiệu ứng hover cho các liên kết trong menu */
+.navbar .menu a:hover {
+  background-color: #fff;
+  color: #007BFF;
+}
+
+.navbar .menu a.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.navbar .search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar .search-bar input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 200px;
+  font-size: 1em;
+}
+
+.navbar .search-bar button {
+  padding: 8px 16px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.navbar .search-bar button:hover {
+  background-color: #0056b3;
+}
+
+/* Banner */
+.banner {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #e3f2fd;
+  margin-top: 60px; /* Bù phần thanh điều hướng */
+}
+
+.banner img {
+  width: 150px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.banner-buttons button {
+  margin: 10px;
+}
+
+/* Danh sách sản phẩm */
+.product-list {
+  padding: 20px;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  width: 220px;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 10px;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+}
+
+.card-header .card-title {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.card-footer {
+  padding: 10px;
+  background-color: #f8f8f8;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-footer .price {
+  font-size: 14px;
+  color: #ff5722;
+}
+
+.card-link a {
+  color: #007BFF;
+  text-decoration: none;
+}
+.Payment{
+  background-color: #007BFF;
+  color: #fff
+}
+
+.card {
+  border: 1px solid #ddd; /* Đường viền nhẹ */
+  border-radius: 8px; /* Góc bo tròn */
+  overflow: hidden;
+  margin: 10px; /* Khoảng cách giữa các card */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+  transition: transform 0.3s ease; /* Hiệu ứng hover */
+}
+
+.card:hover {
+  transform: scale(1.05); /* Phóng to khi hover */
+}
+
+.card img {
+  width: 100%; /* Chiếm toàn bộ chiều rộng card */
+  height: 180px; /* Đặt chiều cao cố định cho hình ảnh */
+  object-fit: cover; /* Cắt ảnh gọn gàng */
+}
+
+.card-body {
+  padding: 10px; /* Khoảng cách bên trong card */
+  text-align: center; /* Căn giữa nội dung */
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+.button {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: none;
+  background-color: #007bff; /* Màu xanh nổi bật */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #0056b3; /* Hiệu ứng hover */
+}
+
+.button-secondary {
+  background-color: #f8f9fa; /* Màu nút phụ */
+  color: #333;
+}
+
+.button-secondary:hover {
+  background-color: #e9ecef;
+}
+
+.button-secondary{
+  cursor: pointer;
+}
+
+.category-filter a.active {
+  font-weight: bold;
+  color: #007BFF;
+  text-decoration: underline;
+}
+
+
+@media (max-width: 768px) {
+  .product-card {
+      flex: 1 1 calc(50% - 20px); /* 2 sản phẩm mỗi hàng trên màn hình nhỏ */
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card {
+      flex: 1 1 100%; /* 1 sản phẩm mỗi hàng trên màn hình rất nhỏ */
+  }
+}
+
+
+
