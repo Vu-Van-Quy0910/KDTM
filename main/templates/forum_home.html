@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diễn đàn</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">  
+</head>
+<body>
+    <div class="forum-container">
+        <!-- Tiêu đề và nút tạo bài đăng -->
+        <header class="forum-header">
+            <h1>Diễn đàn</h1>
+            <a href="{% url 'create_post' %}" class="btn btn-success">Tạo bài đăng mới</a>
+        </header>
+
+        <!-- Nút quay lại trang chủ -->
+        <div class="back-to-home">
+            <a href="{% url 'home' %}" class="btn btn-primary">Quay lại Trang Chủ</a>
+        </div>
+
+        <!-- Danh sách bài đăng -->
+        <section class="posts-section">
+            <ul class="posts-list">
+                {% for post in posts %}
+                    <li class="post-item">
+                        <!-- Hình ảnh hoặc video bài đăng -->
+                        {% if post.image %}
+                        <div class="post-image">
+                            <img src="{{ post.image.url }}" alt="Hình ảnh bài đăng">
+                        </div>
+                        {% elif post.video %}
+                        <div class="post-video">
+                            <video controls>
+                                <source src="{{ post.video.url }}" type="video/mp4">
+                                Trình duyệt của bạn không hỗ trợ video.
+                            </video>
+                        </div>
+                        {% endif %}
+
+                        <!-- Nội dung bài đăng -->
+                        <div class="post-content">
+                            <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+                            <p>{{ post.content|truncatewords:30 }}</p>
+
+                            <!-- Thông tin bài đăng -->
+                            <div class="post-metadata">
+                                <p>Đăng bởi {% if post.author.is_staff %}admin{% else %}{{ request.session.display_name }}{% endif %} vào lúc {{ post.created_at|date:"H:i d/m/Y" }}</p>
+                            </div>
+
+                            <!-- Hành động bài đăng -->
+                            <div class="post-actions">
+                                <p><span id="post-likes-count-{{ post.id }}">{{ post.likes_count }} lượt thích</span> | {{ post.comments.count }} bình luận</p>
+                                <button class="like-post-btn" data-post-id="{{ post.id }}">
+                                    <i class="fas fa-thumbs-up"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Bình luận -->
+                        <div class="post-comments">
+                            <h4>Bình luận:</h4>
+                            <ul class="comment-list" id="comments-list-{{ post.id }}">
+                                {% for comment in post.comments.all %}
+                                    <li class="comment-item">
+                                        <p><strong>{% if comment.author.is_staff %}admin{% else %}{{ request.session.display_name }}{% endif %}</strong>: {{ comment.content }}</p>
+                                        <small>{{ comment.created_at|date:"H:i d/m/Y" }}</small>
+                                        {% if comment.author == user or user.profile.is_admin %}
+                                        <a href="{% url 'delete_comment' comment.id %}" class="btn btn-sm btn-danger">Xóa</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                            <!-- Form thêm bình luận -->
+                            <form method="post" class="comment-form" data-post-id="{{ post.id }}">
+                                {% csrf_token %}
+                                <textarea name="content" placeholder="Viết bình luận..." required></textarea>
+                                <button type="submit" class="btn btn-submit">Gửi bình luận</button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const commentForms = document.querySelectorAll('.comment-form');
+
+            commentForms.forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault(); // Ngăn chặn reload trang
+
+                    const postId = this.getAttribute('data-post-id');
+                    const content = this.querySelector('textarea[name="content"]').value.trim();
+                    const csrfToken = this.querySelector('[name="csrfmiddlewaretoken"]').value;
+
+                    if (!content) {
+                        alert('Vui lòng nhập nội dung bình luận.');
+                        return;
+                    }
+
+                    fetch(`/forum/post/${postId}/comment/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: JSON.stringify({ content: content })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const commentList = document.getElementById(`comments-list-${postId}`);
+                            const newComment = document.createElement('li');
+                            newComment.classList.add('comment-item');
+                            newComment.innerHTML = `
+                                <p><strong>${data.author}</strong>: ${data.content}</p>
+                                <small>${data.created_at}</small>
+                            `;
+                            commentList.appendChild(newComment);
+
+                            // Xóa nội dung trong ô nhập liệu
+                            this.querySelector('textarea[name="content"]').value = '';
+                        } else {
+                            alert(data.error || 'Có lỗi xảy ra, vui lòng thử lại.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi gửi bình luận:', error);
+                        alert('Có lỗi xảy ra, vui lòng thử lại.');
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

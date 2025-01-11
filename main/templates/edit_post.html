@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh sửa bài đăng</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="edit-post-container">
+        <header class="edit-post-header">
+            <h2>Chỉnh sửa bài đăng</h2>
+        </header>
+
+        <form method="POST" enctype="multipart/form-data" class="edit-post-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">Tiêu đề</label>
+                <input type="text" name="title" id="title" value="{{ post.title }}" required><br>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Nội dung</label>
+                <textarea name="content" id="content" required>{{ post.content }}</textarea><br>
+            </div>
+
+            <div class="form-group">
+                <label for="image">Hình ảnh</label>
+                <input type="file" name="image" id="image"><br>
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="Current image" style="max-width: 200px; margin-top: 10px;"><br>
+                    <button type="submit" name="delete_image" value="1" class="btn btn-danger">Xóa hình ảnh</button>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="document">Tài liệu</label>
+                <input type="file" name="document" id="document"><br>
+                {% if post.document %}
+                    <a href="{{ post.document.url }}" target="_blank">Tải tài liệu hiện tại</a><br>
+                    <button type="submit" name="delete_document" value="1" class="btn btn-danger">Xóa tài liệu</button>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="video">Video</label>
+                <input type="file" name="video" id="video" accept="video/*"><br>
+                {% if post.video %}
+                    <video controls style="max-width: 100%; margin-top: 10px;">
+                        <source src="{{ post.video.url }}" type="video/mp4">
+                        Trình duyệt của bạn không hỗ trợ video.
+                    </video><br>
+                    <button type="submit" name="delete_video" value="1" class="btn btn-danger">Xóa video</button>
+                {% endif %}
+            </div>
+            
+            
+            
+            <button type="submit" class="btn btn-success">Cập nhật bài đăng</button>
+        </form>
+
+        <a href="{% url 'post_detail' post.id %}" class="btn btn-primary">Quay lại chi tiết bài đăng</a>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    <!-- <script>
+        function deleteMedia(type) {
+            if (confirm("Bạn có chắc chắn muốn xóa " + type + " này?")) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = ''; // URL hiện tại
+                const csrf = document.createElement('input');
+                csrf.type = 'hidden';
+                csrf.name = 'csrfmiddlewaretoken';
+                csrf.value = '{{ csrf_token }}';
+                form.appendChild(csrf);
+    
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'delete_' + type;
+                input.value = '1';
+                form.appendChild(input);
+    
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script> -->
+</body>
+</html>
